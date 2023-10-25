@@ -130,8 +130,12 @@ class FPGA_rx_Streamer:
             print("Number of Ingress Packets = ", self.buf.read_local_reg(16))
             print("########################################################")
 
-def main(self):
+def main():
     num_byte = 20
+    latency_test(num_byte)
+
+def latency_test(num_byte):
+    print("start latency test for loopback test")
     some_junks = num_byte*"AB"
     tx_obj = FPGA_tx_Streamer()
     rx_obj = FPGA_rx_Streamer()
@@ -140,10 +144,11 @@ def main(self):
     start_time = time.time()
     tx_obj.transmit_text(some_junks)
     rx_obj.receive_text(target_timeout, num_byte)
-    time_diff = time.time() - start_time
-    print("latency for loopback test: ", time_diff)
+    time_diff = time.time() - start_timei # in ns
+    tp = num_byte*8 / (time_diff/1E9)   
+    print("latency for loopback test: ", time_diff, "total byte sent: " num_byte, "throuhgput (Gb/s): " , tp)
 
-
+    
 
 
 if __name__ == "__main__":
